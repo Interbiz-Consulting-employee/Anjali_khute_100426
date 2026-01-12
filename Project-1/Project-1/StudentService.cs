@@ -12,13 +12,22 @@ public class StudentService
         {
             Student s = new Student();
 
-            Console.Write("First Name: "); 
-            s.FirstName = Console.ReadLine();
+            //Console.Write("First Name: "); 
+            //s.FirstName = Console.ReadLine();
 
+            Console.Write("First Name: ");
+            string firstName = Console.ReadLine();
+
+            if (string.IsNullOrWhiteSpace(firstName))
+            {
+                Console.WriteLine("First Name cannot be empty or blank");
+                return;
+            }
+
+            s.FirstName = firstName.Trim();
 
             Console.Write("Middle Name: ");
             s.MiddleName = Console.ReadLine();
-
 
             Console.Write("Last Name: ");
             s.LastName = Console.ReadLine();
@@ -70,6 +79,13 @@ public class StudentService
                 Console.Write("Enter Class: ");
                 string input = Console.ReadLine();
 
+                if (int.TryParse(input, out _))
+                {
+                    //Console.WriteLine("Numbers are not allowed.");
+                    Console.WriteLine(ConstMessages.NumbersNotAllowed);
+                    continue;
+                }
+
                 if (Enum.TryParse(input, true, out Classes cls)
                     && Enum.IsDefined(typeof(Classes), cls))
                 {
@@ -105,6 +121,13 @@ public class StudentService
 
                 if (input.Equals("done", StringComparison.OrdinalIgnoreCase))
                     break;
+
+                if (int.TryParse(input, out _))
+                {
+                    //Console.WriteLine("Numbers are not allowed.");
+                    Console.WriteLine(ConstMessages.NumbersNotAllowed);
+                    continue;
+                }
 
                 if (!Enum.TryParse(input, true, out Subject subject)
                     || !Enum.IsDefined(typeof(Subject), subject))
@@ -194,6 +217,38 @@ public class StudentService
     }
 
 
+    //public void FindTopperOfClass()
+    //{
+    //    Console.WriteLine("Available Classes:");
+    //    foreach (Classes c in Enum.GetValues(typeof(Classes)))
+    //        Console.WriteLine(c);
+
+    //    Console.Write("Enter Class: ");
+    //    Classes cls = (Classes)Enum.Parse(typeof(Classes), Console.ReadLine(), true);
+
+    //    Student topper = null;
+    //    double max = -1;
+
+    //    foreach (Student s in students)
+    //    {
+    //        if (s.ClassName == cls)
+    //        {
+    //            double p = s.GetPercentage();
+    //            if (p > max)
+    //            {
+    //                max = p;
+    //                topper = s;
+    //            }
+    //        }
+    //    }
+
+    //    if (topper != null)
+    //        topper.Print();
+    //    else
+    //        Console.WriteLine("No student found");
+    //}
+
+
     public void FindTopperOfClass()
     {
         Console.WriteLine("Available Classes:");
@@ -208,7 +263,7 @@ public class StudentService
 
         foreach (Student s in students)
         {
-            if (s.ClassName == cls)
+            if (s.ClassName == cls && s.IsPassed())
             {
                 double p = s.GetPercentage();
                 if (p > max)
@@ -220,10 +275,16 @@ public class StudentService
         }
 
         if (topper != null)
+        {
+            Console.WriteLine("Class Topper");
             topper.Print();
+        }
         else
-            Console.WriteLine("No student found");
+        {
+            Console.WriteLine("No PASSED students found in this class");
+        }
     }
+
 
 
     //public void ShowClassesEvery10Seconds()
@@ -388,6 +449,74 @@ public class StudentService
 
 
 
+    //public void FindNthTopper()
+    //{
+    //    Console.WriteLine("Available Classes:");
+    //    foreach (Classes c in Enum.GetValues(typeof(Classes)))
+    //        Console.WriteLine(c);
+
+    //    Console.Write("Enter Class: ");
+    //    Classes cls = (Classes)Enum.Parse(typeof(Classes), Console.ReadLine(), true);
+
+    //    Console.Write("Enter N (greater than 1): ");
+    //    int n = int.Parse(Console.ReadLine());
+
+    //    List<double> percentages = new List<double>();
+
+    //    foreach (Student s in students)
+    //    {
+    //        if (s.ClassName == cls)
+    //        {
+    //            double p = s.GetPercentage();
+
+    //            bool exists = false;
+    //            foreach (double val in percentages)
+    //            {
+    //                if (val == p)
+    //                {
+    //                    exists = true;
+    //                    break;
+    //                }
+    //            }
+
+    //            if (!exists)
+    //                percentages.Add(p);
+    //        }
+    //    }
+
+    //    if (percentages.Count < n)
+    //    {
+    //        Console.WriteLine("Not enough students");
+    //        return;
+    //    }
+
+    //    // sort descending
+    //    for (int i = 0; i < percentages.Count; i++)
+    //    {
+    //        for (int j = i + 1; j < percentages.Count; j++)
+    //        {
+    //            if (percentages[j] > percentages[i])
+    //            {
+    //                double temp = percentages[i];
+    //                percentages[i] = percentages[j];
+    //                percentages[j] = temp;
+    //            }
+    //        }
+    //    }
+
+    //    double nthPercent = percentages[n - 1];
+
+    //    Console.WriteLine($"Roll Numbers at position {n}:");
+    //    foreach (Student s in students)
+    //    {
+    //        if (s.ClassName == cls && s.GetPercentage() == nthPercent)
+    //        {
+    //            Console.WriteLine("Roll No: " + s.RollNo);
+    //        }
+    //    }
+    //}
+
+
     public void FindNthTopper()
     {
         Console.WriteLine("Available Classes:");
@@ -402,30 +531,21 @@ public class StudentService
 
         List<double> percentages = new List<double>();
 
+        // collect unique percentages of PASSED students
         foreach (Student s in students)
         {
-            if (s.ClassName == cls)
+            if (s.ClassName == cls && s.IsPassed())
             {
                 double p = s.GetPercentage();
 
-                bool exists = false;
-                foreach (double val in percentages)
-                {
-                    if (val == p)
-                    {
-                        exists = true;
-                        break;
-                    }
-                }
-
-                if (!exists)
+                if (!percentages.Contains(p))
                     percentages.Add(p);
             }
         }
 
         if (percentages.Count < n)
         {
-            Console.WriteLine("Not enough students");
+            Console.WriteLine("Not enough PASSED students");
             return;
         }
 
@@ -445,10 +565,13 @@ public class StudentService
 
         double nthPercent = percentages[n - 1];
 
-        Console.WriteLine($"Roll Numbers at position {n}:");
+        Console.WriteLine($"Nth Topper (PASS students only) at position {n}:");
+
         foreach (Student s in students)
         {
-            if (s.ClassName == cls && s.GetPercentage() == nthPercent)
+            if (s.ClassName == cls &&
+                s.IsPassed() &&
+                s.GetPercentage() == nthPercent)
             {
                 Console.WriteLine("Roll No: " + s.RollNo);
             }

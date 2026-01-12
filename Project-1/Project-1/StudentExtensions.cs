@@ -15,6 +15,8 @@
         Console.WriteLine($"Total: {s.TotalMarks()}");
         Console.WriteLine($"Percentage: {s.GetPercentage():0.00}%");
 
+        Console.WriteLine($"Result: {(s.IsPassed() ? "PASS" : "FAIL")}");
+
         Console.WriteLine("Hobbies:");
         foreach (string h in s.Hobbies)
             Console.WriteLine("- " + h);

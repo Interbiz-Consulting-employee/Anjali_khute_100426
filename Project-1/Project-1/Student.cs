@@ -46,4 +46,15 @@ public class Student
         //return (TotalMarks() * 100.0) / (Marks.Count * 100);
         return (TotalMarks() / Marks.Count);
     }
+
+    public bool IsPassed()
+    {
+        foreach (int marks in Marks.Values)
+        {
+            if (marks < 33)
+                return false;
+        }
+        return true;
+    }
+
 }

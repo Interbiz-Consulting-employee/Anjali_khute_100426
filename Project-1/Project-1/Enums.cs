@@ -4,11 +4,11 @@
     English,
     Hindi,
     Math,
-    EnvironmentalStudies,
+    Environmental_Studies,
 
     // Middle (Class 6–8)
     Science,
-    SocialScience,
+    Social_Science,
     Sanskrit,
     Computer,
     GK,
@@ -24,12 +24,12 @@
 
     // Senior Secondary (Class 11–12)
     Accountancy,
-    BusinessStudies,
-    PoliticalScience,
+    Business_Studies,
+    Political_Science,
     Psychology,
     Sociology,
     Statistics,
-    PhysicalEducation
+    Physical_Education
 }
 
 
