@@ -1,7 +1,4 @@
-﻿// See https://aka.ms/new-console-template for more information
-//Console.WriteLine("Hello, World!");
-
-using System;
+﻿using System;
 using System.Collections.Generic;
 
 class LongestConsecutiveSequence
@@ -9,20 +6,24 @@ class LongestConsecutiveSequence
     static void Main()
     {
         Console.WriteLine("Enter number of elements:");
-        int n = int.Parse(Console.ReadLine());
 
-        if (n <= 0)
+        int n;
+
+        while (!int.TryParse(Console.ReadLine(), out n) || n <= 0)
         {
-            Console.WriteLine("Array must contain at least one element.");
-            return;
+            Console.WriteLine("Invalid input. Please enter a positive number:");
         }
 
         int[] nums = new int[n];
 
         Console.WriteLine("Enter elements:");
+
         for (int i = 0; i < n; i++)
         {
-            nums[i] = int.Parse(Console.ReadLine());
+            while (!int.TryParse(Console.ReadLine(), out nums[i]))
+            {
+                Console.WriteLine("Invalid input. Please enter a valid integer:");
+            }
         }
 
         var result = FindLongestConsecutive(nums);
@@ -40,7 +41,6 @@ class LongestConsecutiveSequence
 
         foreach (int num in set)
         {
-           
             if (!set.Contains(num - 1))
             {
                 int currentNum = num;
